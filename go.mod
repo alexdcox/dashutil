@@ -14,5 +14,6 @@ require (
 )
 
 replace (
+	github.com/alexdcox/dashutil => ./
 	github.com/alexdcox/dashd-go v0.22.0-beta => ../dashd-go
 )

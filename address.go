@@ -11,10 +11,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/alexdcox/dashutil/base58"
-	"github.com/alexdcox/dashutil/bech32"
 	"github.com/alexdcox/dashd-go/btcec"
 	"github.com/alexdcox/dashd-go/chaincfg"
+	"github.com/alexdcox/dashutil/base58"
+	"github.com/alexdcox/dashutil/bech32"
 	"golang.org/x/crypto/ripemd160"
 )
 
@@ -31,7 +31,7 @@ func (e UnsupportedWitnessVerError) Error() string {
 type UnsupportedWitnessProgLenError int
 
 func (e UnsupportedWitnessProgLenError) Error() string {
-	return "unsupported witness program length: " + string(e)
+	return "unsupported witness program length" + fmt.Sprintf("%d", e)
 }
 
 var (
