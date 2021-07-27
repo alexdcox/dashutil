@@ -9,13 +9,13 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/alexdcox/dashutil"
-	"github.com/alexdcox/dashutil/gcs"
-	"github.com/alexdcox/dashutil/gcs/builder"
 	"github.com/alexdcox/dashd-go/chaincfg"
 	"github.com/alexdcox/dashd-go/chaincfg/chainhash"
 	"github.com/alexdcox/dashd-go/txscript"
 	"github.com/alexdcox/dashd-go/wire"
+	"github.com/alexdcox/dashutil"
+	"github.com/alexdcox/dashutil/gcs"
+	"github.com/alexdcox/dashutil/gcs/builder"
 )
 
 var (
@@ -48,7 +48,7 @@ var (
 
 	testHash = "000000000000000000496d7ff9bd2c96154a8d64260e8b3b411e625712abb14c"
 
-	testAddr = "3Nxwenay9Z8Lc9JBiywExpnEFiLp6Afp8v"
+	testAddr = "yP8A3cbdxRtLRduy5mXDsBnJtMzHWs6ZXr"
 
 	witness = [][]byte{
 		{0x4c, 0xb1, 0xab, 0x12, 0x57, 0x62, 0x1e, 0x41,
@@ -80,7 +80,7 @@ func TestUseBlockHash(t *testing.T) {
 	}
 
 	// dashutil.Address
-	addr, err := dashutil.DecodeAddress(testAddr, &chaincfg.MainNetParams)
+	addr, err := dashutil.DecodeAddress(testAddr, &chaincfg.TestNetParams)
 	if err != nil {
 		t.Fatalf("Address decode failed: %s", err.Error())
 	}

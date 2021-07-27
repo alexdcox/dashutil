@@ -7,9 +7,9 @@ package dashutil_test
 import (
 	"testing"
 
-	. "github.com/alexdcox/dashutil"
 	"github.com/alexdcox/dashd-go/btcec"
 	"github.com/alexdcox/dashd-go/chaincfg"
+	. "github.com/alexdcox/dashutil"
 )
 
 func TestEncodeDecodeWIF(t *testing.T) {
@@ -29,7 +29,7 @@ func TestEncodeDecodeWIF(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	wif2, err := NewWIF(priv2, &chaincfg.TestNet3Params, true)
+	wif2, err := NewWIF(priv2, &chaincfg.TestNetParams, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,7 +40,7 @@ func TestEncodeDecodeWIF(t *testing.T) {
 	}{
 		{
 			wif1,
-			"5HueCGU8rMjxEXxiPuD5BDku4MkFqeZyd4dZ1jvhTVqvbTLvyTJ",
+			"7qeDbtaZch9AUt8KHxP1fbKkf2YqFAcXRe1jZ8Cq1JMQ6nMVBe4",
 		},
 		{
 			wif2,

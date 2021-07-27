@@ -6,9 +6,8 @@ package hdkeychain_test
 
 import (
 	"fmt"
-
-	"github.com/alexdcox/dashutil/hdkeychain"
 	"github.com/alexdcox/dashd-go/chaincfg"
+	"github.com/alexdcox/dashutil/hdkeychain"
 )
 
 // This example demonstrates how to generate a cryptographically random seed
@@ -132,8 +131,8 @@ func Example_defaultWalletLayout() {
 	fmt.Println("Account 0 Internal Address 0:", acct0IntAddr)
 
 	// Output:
-	// Account 0 External Address 10: 1HVccubUT8iKTapMJ5AnNA4sLRN27xzQ4F
-	// Account 0 Internal Address 0: 1J5rebbkQaunJTUoNVREDbeB49DqMNFFXk
+	// Account 0 External Address 10: XsBTTAFNQqvucXQw9xV1DgkfAkwi4zZNyJ
+	// Account 0 Internal Address 0: XsmhUrFeNJ8NTQ5PENjT58KxtUoXN43LDe
 }
 
 // This example demonstrates the audits use case in BIP0032.
