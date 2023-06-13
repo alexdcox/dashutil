@@ -9,10 +9,10 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/alexdcox/dashutil"
-	"github.com/alexdcox/dashutil/bloom"
+	"github.com/alexdcox/dashd-go/btcutil"
 	"github.com/alexdcox/dashd-go/chaincfg/chainhash"
 	"github.com/alexdcox/dashd-go/wire"
+	"github.com/alexdcox/dashutil/bloom"
 )
 
 func TestMerkleBlock3(t *testing.T) {
@@ -29,7 +29,7 @@ func TestMerkleBlock3(t *testing.T) {
 		t.Errorf("TestMerkleBlock3 DecodeString failed: %v", err)
 		return
 	}
-	blk, err := dashutil.NewBlockFromBytes(blockBytes)
+	blk, err := btcutil.NewBlockFromBytes(blockBytes)
 	if err != nil {
 		t.Errorf("TestMerkleBlock3 NewBlockFromBytes failed: %v", err)
 		return

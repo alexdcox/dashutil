@@ -8,10 +8,10 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/alexdcox/dashutil/base58"
 	"github.com/alexdcox/dashd-go/btcec"
 	"github.com/alexdcox/dashd-go/chaincfg"
 	"github.com/alexdcox/dashd-go/chaincfg/chainhash"
+	"github.com/alexdcox/dashutil/base58"
 )
 
 // ErrMalformedPrivateKey describes an error where a WIF-encoded private
@@ -68,14 +68,14 @@ func (w *WIF) IsForNet(net *chaincfg.Params) bool {
 // The WIF string must be a base58-encoded string of the following byte
 // sequence:
 //
-//  * 1 byte to identify the network, must be 0x80 for mainnet or 0xef for
-//    either TestNet or the regression test network
-//  * 32 bytes of a binary-encoded, big-endian, zero-padded private key
-//  * Optional 1 byte (equal to 0x01) if the address being imported or exported
-//    was created by taking the RIPEMD160 after SHA256 hash of a serialized
-//    compressed (33-byte) public key
-//  * 4 bytes of checksum, must equal the first four bytes of the double SHA256
-//    of every byte before the checksum in this sequence
+//   - 1 byte to identify the network, must be 0x80 for mainnet or 0xef for
+//     either TestNet or the regression test network
+//   - 32 bytes of a binary-encoded, big-endian, zero-padded private key
+//   - Optional 1 byte (equal to 0x01) if the address being imported or exported
+//     was created by taking the RIPEMD160 after SHA256 hash of a serialized
+//     compressed (33-byte) public key
+//   - 4 bytes of checksum, must equal the first four bytes of the double SHA256
+//     of every byte before the checksum in this sequence
 //
 // If the base58-decoded byte sequence does not match this, DecodeWIF will
 // return a non-nil error.  ErrMalformedPrivateKey is returned when the WIF
@@ -117,7 +117,7 @@ func DecodeWIF(wif string) (*WIF, error) {
 
 	netID := decoded[0]
 	privKeyBytes := decoded[1 : 1+btcec.PrivKeyBytesLen]
-	privKey, _ := btcec.PrivKeyFromBytes(btcec.S256(), privKeyBytes)
+	privKey, _ := btcec.PrivKeyFromBytes(privKeyBytes)
 	return &WIF{privKey, compress, netID}, nil
 }
 
@@ -138,7 +138,7 @@ func (w *WIF) String() string {
 	a = append(a, w.netID)
 	// Pad and append bytes manually, instead of using Serialize, to
 	// avoid another call to make.
-	a = paddedAppend(btcec.PrivKeyBytesLen, a, w.PrivKey.D.Bytes())
+	a = paddedAppend(btcec.PrivKeyBytesLen, a, w.PrivKey.Serialize())
 	if w.CompressPubKey {
 		a = append(a, compressMagic)
 	}
@@ -151,7 +151,7 @@ func (w *WIF) String() string {
 // exported private key in either a compressed or uncompressed format.  The
 // serialization format chosen depends on the value of w.CompressPubKey.
 func (w *WIF) SerializePubKey() []byte {
-	pk := (*btcec.PublicKey)(&w.PrivKey.PublicKey)
+	pk := w.PrivKey.PubKey()
 	if w.CompressPubKey {
 		return pk.SerializeCompressed()
 	}

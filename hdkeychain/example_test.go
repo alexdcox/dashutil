@@ -6,6 +6,7 @@ package hdkeychain_test
 
 import (
 	"fmt"
+
 	"github.com/alexdcox/dashd-go/chaincfg"
 	"github.com/alexdcox/dashutil/hdkeychain"
 )

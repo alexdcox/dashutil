@@ -5,21 +5,21 @@
 /*
 Package dashutil provides bitcoin-specific convenience functions and types.
 
-Block Overview
+# Block Overview
 
 A Block defines a bitcoin block that provides easier and more efficient
 manipulation of raw wire protocol blocks.  It also memoizes hashes for the
 block and its transactions on their first access so subsequent accesses don't
 have to repeat the relatively expensive hashing operations.
 
-Tx Overview
+# Tx Overview
 
 A Tx defines a bitcoin transaction that provides more efficient manipulation of
 raw wire protocol transactions.  It memoizes the hash for the transaction on its
 first access so subsequent accesses don't have to repeat the relatively
 expensive hashing operations.
 
-Address Overview
+# Address Overview
 
 The Address interface provides an abstraction for a Bitcoin address.  While the
 most common type is a pay-to-pubkey-hash, Bitcoin already supports others and
@@ -36,7 +36,7 @@ To decode/encode an address:
 		"e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d57" +
 		"8a4c702b6bf11d5f"
 	defaultNet := &chaincfg.MainNetParams
-	addr, err := dashutil.DecodeAddress(addrString, defaultNet)
+	addr, err := btcutil.DecodeAddress(addrString, defaultNet)
 	if err != nil {
 		fmt.Println(err)
 		return

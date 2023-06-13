@@ -12,9 +12,9 @@ interface. The functions are only exported while the tests are being run.
 package dashutil
 
 import (
+	"github.com/alexdcox/dashd-go/btcec"
 	"github.com/alexdcox/dashutil/base58"
 	"github.com/alexdcox/dashutil/bech32"
-	"github.com/alexdcox/dashd-go/btcec"
 	"golang.org/x/crypto/ripemd160"
 )
 
@@ -82,7 +82,7 @@ func TstAddressWitnessScriptHash(version byte, program [32]byte,
 func TstAddressPubKey(serializedPubKey []byte, pubKeyFormat PubKeyFormat,
 	netID byte) *AddressPubKey {
 
-	pubKey, _ := btcec.ParsePubKey(serializedPubKey, btcec.S256())
+	pubKey, _ := btcec.ParsePubKey(serializedPubKey)
 	return &AddressPubKey{
 		pubKeyFormat: pubKeyFormat,
 		pubKey:       (*btcec.PublicKey)(pubKey),

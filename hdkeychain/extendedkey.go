@@ -18,11 +18,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/alexdcox/dashutil"
-	"github.com/alexdcox/dashutil/base58"
 	"github.com/alexdcox/dashd-go/btcec"
+	"github.com/alexdcox/dashd-go/btcutil"
 	"github.com/alexdcox/dashd-go/chaincfg"
 	"github.com/alexdcox/dashd-go/chaincfg/chainhash"
+	"github.com/alexdcox/dashutil/base58"
 )
 
 const (
@@ -154,9 +154,19 @@ func (k *ExtendedKey) pubKeyBytes() []byte {
 	// This is a private extended key, so calculate and memoize the public
 	// key if needed.
 	if len(k.pubKey) == 0 {
+		// TODO: Verify this!
 		pkx, pky := btcec.S256().ScalarBaseMult(k.key)
-		pubKey := btcec.PublicKey{Curve: btcec.S256(), X: pkx, Y: pky}
-		k.pubKey = pubKey.SerializeCompressed()
+
+		// pubKey := btcec.PublicKey{X: pkx, Y: pky}
+		// pubKey, _ := btcec.ParsePubKey(k.pubKey)
+
+		pkxFieldVal := new(btcec.FieldVal)
+		pkxFieldVal.SetByteSlice(pkx.Bytes())
+		pkyFieldVal := new(btcec.FieldVal)
+		pkyFieldVal.SetByteSlice(pky.Bytes())
+		pk := btcec.NewPublicKey(pkxFieldVal, pkyFieldVal)
+
+		k.pubKey = pk.SerializeCompressed()
 	}
 
 	return k.pubKey
@@ -308,7 +318,7 @@ func (k *ExtendedKey) Child(i uint32) (*ExtendedKey, error) {
 		// Convert the serialized compressed parent public key into X
 		// and Y coordinates so it can be added to the intermediate
 		// public key.
-		pubKey, err := btcec.ParsePubKey(k.key, btcec.S256())
+		pubKey, err := btcec.ParsePubKey(k.key)
 		if err != nil {
 			return nil, err
 		}
@@ -317,14 +327,20 @@ func (k *ExtendedKey) Child(i uint32) (*ExtendedKey, error) {
 		// derive the final child key.
 		//
 		// childKey = serP(point(parse256(Il)) + parentKey)
-		childX, childY := btcec.S256().Add(ilx, ily, pubKey.X, pubKey.Y)
-		pk := btcec.PublicKey{Curve: btcec.S256(), X: childX, Y: childY}
+		childX, childY := btcec.S256().Add(ilx, ily, pubKey.X(), pubKey.Y())
+
+		childXFieldVal := new(btcec.FieldVal)
+		childXFieldVal.SetByteSlice(childX.Bytes())
+		childYFieldVal := new(btcec.FieldVal)
+		childYFieldVal.SetByteSlice(childY.Bytes())
+		pk := btcec.NewPublicKey(childXFieldVal, childYFieldVal)
+
 		childKey = pk.SerializeCompressed()
 	}
 
 	// The fingerprint of the parent for the derived child is the first 4
 	// bytes of the RIPEMD160(SHA256(parentPubKey)).
-	parentFP := dashutil.Hash160(k.pubKeyBytes())[:4]
+	parentFP := btcutil.Hash160(k.pubKeyBytes())[:4]
 	return NewExtendedKey(k.version, childKey, childChainCode, parentFP,
 		k.depth+1, i, isPrivate), nil
 }
@@ -359,7 +375,7 @@ func (k *ExtendedKey) Neuter() (*ExtendedKey, error) {
 
 // ECPubKey converts the extended key to a btcec public key and returns it.
 func (k *ExtendedKey) ECPubKey() (*btcec.PublicKey, error) {
-	return btcec.ParsePubKey(k.pubKeyBytes(), btcec.S256())
+	return btcec.ParsePubKey(k.pubKeyBytes())
 }
 
 // ECPrivKey converts the extended key to a btcec private key and returns it.
@@ -371,15 +387,15 @@ func (k *ExtendedKey) ECPrivKey() (*btcec.PrivateKey, error) {
 		return nil, ErrNotPrivExtKey
 	}
 
-	privKey, _ := btcec.PrivKeyFromBytes(btcec.S256(), k.key)
+	privKey, _ := btcec.PrivKeyFromBytes(k.key)
 	return privKey, nil
 }
 
 // Address converts the extended key to a standard bitcoin pay-to-pubkey-hash
 // address for the passed network.
-func (k *ExtendedKey) Address(net *chaincfg.Params) (*dashutil.AddressPubKeyHash, error) {
-	pkHash := dashutil.Hash160(k.pubKeyBytes())
-	return dashutil.NewAddressPubKeyHash(pkHash, net)
+func (k *ExtendedKey) Address(net *chaincfg.Params) (*btcutil.AddressPubKeyHash, error) {
+	pkHash := btcutil.Hash160(k.pubKeyBytes())
+	return btcutil.NewAddressPubKeyHash(pkHash, net)
 }
 
 // paddedAppend appends the src byte slice to dst, returning the new slice.
@@ -545,7 +561,7 @@ func NewKeyFromString(key string) (*ExtendedKey, error) {
 	} else {
 		// Ensure the public key parses correctly and is actually on the
 		// secp256k1 curve.
-		_, err := btcec.ParsePubKey(keyData, btcec.S256())
+		_, err := btcec.ParsePubKey(keyData)
 		if err != nil {
 			return nil, err
 		}

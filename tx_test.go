@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/alexdcox/dashutil"
+	"github.com/alexdcox/dashd-go/btcutil"
 	"github.com/alexdcox/dashd-go/chaincfg/chainhash"
 	"github.com/davecgh/go-spew/spew"
 )
@@ -18,7 +18,7 @@ import (
 // TestTx tests the API for Tx.
 func TestTx(t *testing.T) {
 	testTx := Block100000.Transactions[0]
-	tx := dashutil.NewTx(testTx)
+	tx := btcutil.NewTx(testTx)
 
 	// Ensure we get the same data back out.
 	if msgTx := tx.MsgTx(); !reflect.DeepEqual(msgTx, testTx) {
@@ -63,7 +63,7 @@ func TestNewTxFromBytes(t *testing.T) {
 	testTxBytes := testTxBuf.Bytes()
 
 	// Create a new transaction from the serialized bytes.
-	tx, err := dashutil.NewTxFromBytes(testTxBytes)
+	tx, err := btcutil.NewTxFromBytes(testTxBytes)
 	if err != nil {
 		t.Errorf("NewTxFromBytes: %v", err)
 		return
@@ -89,7 +89,7 @@ func TestTxErrors(t *testing.T) {
 
 	// Truncate the transaction byte buffer to force errors.
 	shortBytes := testTxBytes[:4]
-	_, err = dashutil.NewTxFromBytes(shortBytes)
+	_, err = btcutil.NewTxFromBytes(shortBytes)
 	if err != io.EOF {
 		t.Errorf("NewTxFromBytes: did not get expected error - "+
 			"got %v, want %v", err, io.EOF)

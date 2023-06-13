@@ -405,7 +405,7 @@ type AddressPubKey struct {
 // address.  The serializedPubKey parameter must be a valid pubkey and can be
 // uncompressed, compressed, or hybrid.
 func NewAddressPubKey(serializedPubKey []byte, net *chaincfg.Params) (*AddressPubKey, error) {
-	pubKey, err := btcec.ParsePubKey(serializedPubKey, btcec.S256())
+	pubKey, err := btcec.ParsePubKey(serializedPubKey)
 	if err != nil {
 		return nil, err
 	}
@@ -440,9 +440,6 @@ func (a *AddressPubKey) serialize() []byte {
 
 	case PKFCompressed:
 		return a.pubKey.SerializeCompressed()
-
-	case PKFHybrid:
-		return a.pubKey.SerializeHybrid()
 	}
 }
 

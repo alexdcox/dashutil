@@ -11,7 +11,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/alexdcox/dashutil/gcs"
+	"github.com/alexdcox/dashd-go/btcutil/gcs"
 )
 
 var (

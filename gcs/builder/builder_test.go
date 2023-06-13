@@ -9,13 +9,13 @@ import (
 	"encoding/hex"
 	"testing"
 
+	"github.com/alexdcox/dashd-go/btcutil"
+	"github.com/alexdcox/dashd-go/btcutil/gcs"
+	"github.com/alexdcox/dashd-go/btcutil/gcs/builder"
 	"github.com/alexdcox/dashd-go/chaincfg"
 	"github.com/alexdcox/dashd-go/chaincfg/chainhash"
 	"github.com/alexdcox/dashd-go/txscript"
 	"github.com/alexdcox/dashd-go/wire"
-	"github.com/alexdcox/dashutil"
-	"github.com/alexdcox/dashutil/gcs"
-	"github.com/alexdcox/dashutil/gcs/builder"
 )
 
 var (
@@ -79,8 +79,8 @@ func TestUseBlockHash(t *testing.T) {
 		Index: 4321,
 	}
 
-	// dashutil.Address
-	addr, err := dashutil.DecodeAddress(testAddr, &chaincfg.TestNetParams)
+	// btcutil.Address
+	addr, err := btcutil.DecodeAddress(testAddr, &chaincfg.TestNet3Params)
 	if err != nil {
 		t.Fatalf("Address decode failed: %s", err.Error())
 	}

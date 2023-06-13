@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/alexdcox/dashutil/gcs"
+	"github.com/alexdcox/dashd-go/btcutil/gcs"
 	"github.com/alexdcox/dashd-go/chaincfg/chainhash"
 	"github.com/alexdcox/dashd-go/txscript"
 	"github.com/alexdcox/dashd-go/wire"
